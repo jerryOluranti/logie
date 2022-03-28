@@ -16,6 +16,7 @@ function validateConfig(): ILoggerConfig {
     log_name: config.log_name ?? "test-log",
     log_path: config.log_path ?? __dirname?.replace("error", "") + "app-logs/",
     max_size: config.max_size ?? 10240,
+    log_to_file: config.log_to_file ?? true
   };
 }
 

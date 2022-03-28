@@ -17,6 +17,12 @@ function logMessage(err: Error): Buffer {
 }
 
 function logLocal(err: Error): void {
+  let newLog = logMessage(err);
+
+  logConsole(newLog.toString());
+
+  if (!config.log_to_file) return;
+
   let logs: Buffer;
   const path = config.log_path;
 
@@ -30,9 +36,7 @@ function logLocal(err: Error): void {
     logs = readFileSync(config.log_path + config.log_name);
   }
 
-  let newLog = logMessage(err);
 
-  logConsole(newLog.toString());
 
   newLog = Buffer.concat([logs, newLog]);
 
