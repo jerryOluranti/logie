@@ -1,4 +1,4 @@
-import { LogError } from "../logger";
+import { logError } from "../logger";
 
 /**
  * Applies try catch to an async logic
@@ -10,7 +10,7 @@ export async function catchAsync<T>(promise: Promise<T>): Promise<{ error: Error
     return { error: null, data: await promise }
   } catch (err) {
     const error = new Error((err as { message: string }).message);
-    LogError(error);
+    logError(error);
     return { error, data: null }
   }
 }
@@ -26,7 +26,7 @@ export async function catchAsyncNoReturn(promise: any): Promise<Error | null> {
     return null;
   } catch (err) {
     const error = new Error((err as { message: string }).message);
-    LogError(error);
+    logError(error);
     return error;
   }
 }
@@ -41,7 +41,7 @@ export function catchSync<T>(result: T): { error: Error, data: null } | { error:
     return { error: null, data: result }
   } catch (err) {
     const error = new Error((err as { message: string }).message);
-    LogError(error);
+    logError(error);
     return { error, data: null }
   }
 }
@@ -57,7 +57,7 @@ export function catchSyncNoReturn(result: any): Error | null {
     return null;
   } catch (err) {
     const error = new Error((err as { message: string }).message);
-    LogError(error);
+    logError(error);
     return error;
   }
 }

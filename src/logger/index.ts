@@ -2,7 +2,7 @@ import { readFileSync, writeFileSync, mkdirSync, existsSync } from "node:fs";
 import { config } from '../';
 require("dotenv").config();
 
-export function LogError(err: Error): void {
+export function logError(err: Error): void {
   if (!err) return;
 
   logLocal(err);
