@@ -1,17 +1,16 @@
 import { readFileSync, writeFileSync, mkdirSync, existsSync } from "node:fs";
-import { config } from '../';
-require("dotenv").config();
+import { config } from "../";
+import { formatDateTime } from "../utils/datetime";
 
 export function logError(err: Error): void {
   if (!err) return;
-
   logLocal(err);
 }
 
 function logMessage(err: Error): Buffer {
-  const logLineDetails = err?.stack?.split("at ")[3]?.trim();
+  const logLineDetails = err?.stack?.split("at ")[1]?.trim();
   return Buffer.from(
-    `[${new Date().toUTCString()}] => ISSUE, Stack: ${logLineDetails}, ${err}\n\n`,
+    `[${formatDateTime(Date.now())}] => ISSUE, Stack: ${logLineDetails}, ${err}\n`,
     "utf-8"
   );
 }
@@ -19,32 +18,32 @@ function logMessage(err: Error): Buffer {
 function logLocal(err: Error): void {
   let newLog = logMessage(err);
 
-  logConsole(newLog.toString());
+  if (!config.logToFile) return;
 
-  if (!config.log_to_file) return;
+  let logs: Buffer = Buffer.from([]);
 
-  let logs: Buffer;
-  const path = config.log_path;
-
-  if (!existsSync(path)) {
-    mkdirSync(path);
+  try {
+    logs = readFileSync(config.logPath + config.logName);
+  } catch (err) {
+    if (!existsSync(config.logPath))
+      mkdirSync(config.logPath);
+    
     logs = Buffer.from(
-      `---- LOG HEAD | START DATE: ${new Date().toUTCString()} ----\n\n`,
+      `---- LOG HEAD | START DATE: ${formatDateTime(
+        Date.now()
+      )}} ----\n`,
       "utf-8"
     );
-  } else {
-    logs = readFileSync(config.log_path + config.log_name);
   }
-
-
 
   newLog = Buffer.concat([logs, newLog]);
 
-  writeFileSync(config.log_path + config.log_name, newLog);
+  writeFileSync(config.logPath + config.logName, newLog);
 }
 
-export function logConsole(message: string): void {
+export function logConsole(message: string | undefined): void {
   console.log(message);
 }
 
-// LogError(new Error("This is a test Error!"));
+// for (let i = 0; i <= 50; i++)
+// logError(new Error("This is a test error => " + i));
