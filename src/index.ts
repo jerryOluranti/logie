@@ -1,26 +1,29 @@
-import { readFileSync } from 'node:fs';
-import { catchSync, logConsole } from ".";
+import {ILoggerConfig} from "@types";
+require("dotenv").config();
 
 function validateConfig(): ILoggerConfig {
-  const { data, error } = catchSync(readFileSync("./config.json"));
+  const configPath = process.env.NODE_ENV === "DEVELOPMENT" ? "../package.json" : "../../../package.json";
+  const logPath = "./src/logs/";
+  let config: ILoggerConfig | undefined;
 
-  let config = {} as ILoggerConfig;
-
-  if (data) {
-    config = JSON.parse(data.toString());
+  try {
+    config = require(configPath).trollerConfig;
+  } catch(err) {
+    config = undefined;
+    // console.log("Could not find config; Using default values...");
   }
 
-  if (error) logConsole("Could not find config file; Using default values...");
-
   return {
-    log_name: config.log_name ?? "test-log",
-    log_path: config.log_path ?? __dirname?.replace("error", "") + "app-logs/",
-    max_size: config.max_size ?? 10240,
-    log_to_file: config.log_to_file ?? true
+    logName: config?.logName ?? "test.log",
+    logPath: config?.logPath ? `../../..${config?.logPath}/logs/` : logPath,
+    logToFile: config?.logToFile ?? true
   };
 }
 
 export const config = validateConfig();
 
 export * from "./logger";
-export * from "./error-handler";
+export * from "./handler";
+export * from "./query";
+
+// console.log(validateConfig());
