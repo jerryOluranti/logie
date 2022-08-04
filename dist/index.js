@@ -9,23 +9,20 @@ function init() {
     let config;
     try {
         let path = "";
-        if (process.env.MODE === "DEVELOPMENT") {
+        if (process.env.DEV_MODE === "DEVELOPMENT") {
             path = "../package.json";
         }
         else {
-            if ((0, process_1.cwd)().includes("node_modules")) {
-                path = (0, process_1.cwd)().split("node_modules")[0].concat("/package.json");
-            }
+            path = (0, process_1.cwd)().split("node_modules")[0].concat("/package.json");
         }
         config = require(path).logie;
     }
     catch (err) {
         config = undefined;
-        console.log("Could not read config from package.json. Using default config...");
     }
     return {
         logName: (_a = config === null || config === void 0 ? void 0 : config.logName) !== null && _a !== void 0 ? _a : "test.log",
-        logPath: process.env.MODE !== "DEVELOPMENT" ? `${(0, process_1.cwd)().split("node_modules")[0]}/logs/` : "/logs/",
+        logPath: process.env.DEV_MODE !== "DEVELOPMENT" ? `${(0, process_1.cwd)().split("node_modules")[0]}${(config === null || config === void 0 ? void 0 : config.logPath) || "/"}/logs/` : "/logs/",
         logToFile: (_b = config === null || config === void 0 ? void 0 : config.logToFile) !== null && _b !== void 0 ? _b : false,
     };
 }

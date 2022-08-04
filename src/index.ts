@@ -7,22 +7,19 @@ function init(): ILoggerConfig {
   
   try {
     let path = "";
-    if (process.env.MODE === "DEVELOPMENT") {
+    if (process.env.DEV_MODE === "DEVELOPMENT") {
       path = "../package.json";
     }else {
-      if(cwd().includes("node_modules")) {
-        path = cwd().split("node_modules")[0].concat("/package.json");
-      }
+      path = cwd().split("node_modules")[0].concat("/package.json");
     }
     config = require(path).logie;
   } catch(err) {
     config = undefined;
-    console.log("Could not read config from package.json. Using default config...");
   }
 
   return {
     logName: config?.logName ?? "test.log",
-    logPath: process.env.MODE !== "DEVELOPMENT" ? `${cwd().split("node_modules")[0]}/logs/` : "/logs/",
+    logPath: process.env.DEV_MODE !== "DEVELOPMENT" ? `${cwd().split("node_modules")[0]}${config?.logPath || "/"}/logs/` : "/logs/",
     logToFile: config?.logToFile ?? false,
   };
 }

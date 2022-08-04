@@ -38,9 +38,9 @@ export declare type LogLevel = "DEBUG" | "INFO" | "LOG" | "WARN" | "ERROR" | "FA
  * Logs a message to the console and log file if `level` is specified
  * @param {string} message text to be logged
  * @param {LogLevel} level optional -  "DEBUG" | "INFO" | "LOG" | "WARN" | "ERROR" | "FATAL" | "CRITICAL"
- * @returns {void}
+ * @returns {void} void
  */
-export declare function log(message: string, level: LogLevel): void;
+export declare function log(message: string, level?: LogLevel): void;
 
 
 
