@@ -1,3 +1,4 @@
+import { cwd } from "node:process";
 import { config } from "../index";
 
 export function initTestSuite() {
@@ -7,8 +8,8 @@ export function initTestSuite() {
 
   it("should have valid config values", () => {
     expect(config).toBeDefined();
-    expect(config.logName).toEqual("test.log");
-    expect(config.logPath).toEqual("./src/logs/");
+    expect(typeof config.logName).toBe('string');
+    expect(config.logPath).toEqual(process.env.MODE === "DEVELOPMENT" ? "/logs/" : `${cwd().split("node_modules")[0]}/logs/`);
     expect(config.logToFile).toBeTruthy();
   });
 }

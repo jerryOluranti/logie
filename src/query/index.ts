@@ -1,6 +1,6 @@
 import { readFile } from "fs/promises";
 import { config } from "..";
-import { catchAsync } from "../handler";
+import { catchAsync } from "../catch";
 import { IQueryFactory, Log, ErrorLevel } from "@types";
 import { parseDateTime } from "../utils/datetime";
 

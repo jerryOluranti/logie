@@ -13,24 +13,26 @@ export function formatDateTime(timestamp: number) {
   const mins = date.getMinutes();
   const secs = date.getSeconds();
 
-  const mm = (month + 1) > 9 ? month + 1 : `0${month + 1}`;
+  const mm = month + 1 > 9 ? month + 1 : `0${month + 1}`;
   const dd = day > 9 ? day : `0${day}`;
+
+  const hh = hour > 9 ? hour : `0${hour}`;
   const _mins = mins > 9 ? mins : `0${mins}`;
   const _secs = secs > 9 ? secs : `0${secs}`;
 
-  return `${year}-${mm}-${dd} ${
-    hour
-  }:${_mins}:${_secs}`;
+  return `${year}-${mm}-${dd} ${hh}:${_mins}:${_secs}`;
 }
-
 
 /**
  * Converts a datetime string format to milliseconds
- * @param {string} str datetime string in format: [yyyy-mm-dd hh:mm:ss] 
+ * @param {string} str datetime string in format: [yyyy-mm-dd hh:mm:ss]
  * @returns {number} milliseconds
  */
 export function parseDateTime(str: string) {
   const timestamp = Date.parse(str.replaceAll(" ", "T"));
-  if (timestamp === 0 || isNaN(timestamp)) throw new Error("Unable to parse datetime string; Invalid string format. [yyyy/mm/dd, hh:mm:ss]")
+  if (timestamp === 0 || isNaN(timestamp))
+    throw new Error(
+      "Unable to parse datetime string; Invalid string format. [yyyy/mm/dd, hh:mm:ss]"
+    );
   return timestamp;
- }
+}
