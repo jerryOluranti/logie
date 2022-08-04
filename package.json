@@ -1,8 +1,9 @@
 {
-  "name": "logspy",
-  "version": "1.0.0",
+  "name": "logie",
+  "version": "1.0.1",
   "main": "dist/index.js",
-  "repository": "git@github.com:jerryOluranti/logspy.git",
+  "description": "Catch, log and query runtime reports and exceptions with this library.",
+  "repository": "git@github.com:jerryOluranti/logie.git",
   "author": "Jeremiah Faluyi <faluyijeremiah2018@gmail.com>",
   "license": "MIT",
   "keywords": [

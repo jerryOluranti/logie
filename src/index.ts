@@ -11,10 +11,10 @@ function init(): ILoggerConfig {
       path = "../package.json";
     }else {
       if(cwd().includes("node_modules")) {
-        path = cwd().split("node_modules")[0].concat("package.json");
+        path = cwd().split("node_modules")[0].concat("/package.json");
       }
     }
-    config = require(path).trollerConfig;
+    config = require(path).logie;
   } catch(err) {
     config = undefined;
     console.log("Could not read config from package.json. Using default config...");
@@ -23,7 +23,7 @@ function init(): ILoggerConfig {
   return {
     logName: config?.logName ?? "test.log",
     logPath: process.env.MODE !== "DEVELOPMENT" ? `${cwd().split("node_modules")[0]}/logs/` : "/logs/",
-    logToFile: config?.logToFile ?? true,
+    logToFile: config?.logToFile ?? false,
   };
 }
 

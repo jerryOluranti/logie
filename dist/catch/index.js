@@ -44,8 +44,7 @@ function catchSyncNoReturn(result, cb, _throw = false) {
 }
 exports.catchSyncNoReturn = catchSyncNoReturn;
 function handleError(err, _throw, cb) {
-    const error = new Error(err.message);
-    (0, logger_1.logError)(error);
+    (0, logger_1.log)(err.message, "ERROR");
     if (cb)
         cb(err);
     if (_throw)

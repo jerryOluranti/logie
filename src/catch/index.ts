@@ -1,4 +1,4 @@
-import { logError } from "../logger";
+import { log } from "../logger";
 
 /**
  * Applies try catch to an async function
@@ -62,8 +62,7 @@ export function catchSyncNoReturn(result: any, cb?: any, _throw: boolean = false
 
 
 function handleError(err: any, _throw: boolean, cb?: any) {
-  const error = new Error((err as { message: string }).message);
-  logError(error);
+  log(err.message, "ERROR");
   if(cb) cb(err);
   if (_throw) throw new Error(err.message);
   return undefined;

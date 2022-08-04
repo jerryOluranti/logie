@@ -14,10 +14,10 @@ function init() {
         }
         else {
             if ((0, process_1.cwd)().includes("node_modules")) {
-                path = (0, process_1.cwd)().split("node_modules")[0].concat("package.json");
+                path = (0, process_1.cwd)().split("node_modules")[0].concat("/package.json");
             }
         }
-        config = require(path).trollerConfig;
+        config = require(path).logie;
     }
     catch (err) {
         config = undefined;
@@ -26,7 +26,7 @@ function init() {
     return {
         logName: (_a = config === null || config === void 0 ? void 0 : config.logName) !== null && _a !== void 0 ? _a : "test.log",
         logPath: process.env.MODE !== "DEVELOPMENT" ? `${(0, process_1.cwd)().split("node_modules")[0]}/logs/` : "/logs/",
-        logToFile: (_b = config === null || config === void 0 ? void 0 : config.logToFile) !== null && _b !== void 0 ? _b : true,
+        logToFile: (_b = config === null || config === void 0 ? void 0 : config.logToFile) !== null && _b !== void 0 ? _b : false,
     };
 }
 exports.config = init();

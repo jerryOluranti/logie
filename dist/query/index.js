@@ -43,8 +43,8 @@ class QueryFactory {
             return {
                 timestamp: (0, datetime_1.parseDateTime)(parsedLog[0].split("=>")[0].trim().replace('[', '').replace(']', '')),
                 level: parsedLog[0].split("=>")[1].trim(),
-                stack: parsedLog[1].trim(),
-                message: parsedLog[2].trim()
+                origin: parsedLog[1].trim().replace("Origin: ", ""),
+                message: parsedLog[2].trim().replace("Message: ", "")
             };
         });
         this.size = this.logs.length;
@@ -77,8 +77,8 @@ class QueryFactory {
         this.temp = (this.temp || this.logs).filter(log => log.message.includes(message));
         return this;
     }
-    findByStack(stack) {
-        this.temp = (this.temp || this.logs).filter((log) => log.stack.includes(stack));
+    findByOrigin(origin) {
+        this.temp = (this.temp || this.logs).filter((log) => log.origin.includes(origin));
         return this;
     }
 }

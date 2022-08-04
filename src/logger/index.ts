@@ -1,24 +1,31 @@
 import { readFileSync, writeFileSync, mkdirSync, existsSync } from "node:fs";
+import { LogLevel } from "@types";
 import { config } from "../";
 import { formatDateTime } from "../utils/datetime";
 
-export function logError(err: Error): void {
-  if (!err) return;
-  logLocal(err);
+/**
+ * Logs a message to the console and log file if `level` is specified
+ * @param {string} message text to be logged
+ * @param {LogLevel} level optional -  "DEBUG" | "INFO" | "LOG" | "WARN" | "ERROR" | "FATAL" | "CRITICAL"
+ * @returns {void}
+ */
+export function log(message: string, level?: LogLevel): void {
+  if (!message || message === "") return;
+  logConsole(message);
+  if(level && config.logToFile) logLocal(message, level);
 }
 
-function logMessage(err: Error): Buffer {
+function logToFile(message: string, level: LogLevel): Buffer {
+  const err = new Error(message);
   const logLineDetails = err?.stack?.split("at ")[1]?.trim();
   return Buffer.from(
-    `[${formatDateTime(Date.now())}] => ISSUE, Stack: ${logLineDetails}, ${err}\n`,
+    `[${formatDateTime(Date.now())}] => ${level}, Origin: ${logLineDetails}, Message: ${message}\n`,
     "utf-8"
   );
 }
 
-function logLocal(err: Error): void {
-  let newLog = logMessage(err);
-
-  if (!config.logToFile) return;
+function logLocal(message: string, level: LogLevel): void {
+  let newLog = logToFile(message, level);
 
   let logs: Buffer = Buffer.from([]);
 
@@ -41,7 +48,7 @@ function logLocal(err: Error): void {
   writeFileSync(config.logPath + config.logName, newLog);
 }
 
-export function logConsole(message: string | undefined): void {
+function logConsole(message: string | undefined): void {
   console.log(message);
 }
 

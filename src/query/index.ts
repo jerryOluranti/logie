@@ -1,7 +1,7 @@
 import { readFile } from "fs/promises";
 import { config } from "..";
 import { catchAsync } from "../catch";
-import { IQueryFactory, Log, ErrorLevel } from "@types";
+import { IQueryFactory, Log, LogLevel } from "@types";
 import { parseDateTime } from "../utils/datetime";
 
 export class Query {
@@ -42,8 +42,8 @@ class QueryFactory implements IQueryFactory {
       return {
         timestamp: parseDateTime(parsedLog[0].split("=>")[0].trim().replace('[', '').replace(']','')),
         level: parsedLog[0].split("=>")[1].trim(),
-        stack: parsedLog[1].trim(),
-        message: parsedLog[2].trim()
+        origin: parsedLog[1].trim().replace("Origin: ", ""),
+        message: parsedLog[2].trim().replace("Message: ", "")
       } as Log
     })
 
@@ -75,7 +75,7 @@ class QueryFactory implements IQueryFactory {
     return this;
   }
 
-  findByErrorLevel(level: ErrorLevel) {
+  findByErrorLevel(level: LogLevel) {
     this.temp = (this.temp || this.logs).filter(log => log.level === level);
     return this;
   }
@@ -85,8 +85,8 @@ class QueryFactory implements IQueryFactory {
     return this;
   }
 
-  findByStack(stack: string) {
-    this.temp = (this.temp || this.logs).filter((log) => log.stack.includes(stack));
+  findByOrigin(origin: string) {
+    this.temp = (this.temp || this.logs).filter((log) => log.origin.includes(origin));
     return this;
   }
 }

@@ -1,7 +1,7 @@
 import { exec } from "node:child_process";
 import path from "node:path";
 import { existsSync, readFileSync } from "node:fs";
-import { logError } from "../logger";
+import { log } from "../logger";
 import { config, catchSync } from "../";
 import { parseDateTime, formatDateTime } from "../utils/datetime";
 
@@ -17,7 +17,7 @@ export function loggerTestSuite() {
     }
 
     // log test error
-    logError(new Error("This is from tests"));
+    log("This is from tests");
 
     // read log file
     logData = catchSync(
