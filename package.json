@@ -2,9 +2,17 @@
   "name": "logspy",
   "version": "1.0.0",
   "main": "dist/index.js",
-  "repository": "https://github.com/jerryOluranti/logspy.git",
+  "repository": "git@github.com:jerryOluranti/logspy.git",
   "author": "Jeremiah Faluyi <faluyijeremiah2018@gmail.com>",
   "license": "MIT",
+  "keywords": [
+    "logging",
+    "logger",
+    "log",
+    "catch",
+    "async",
+    "error handling"
+  ],
   "scripts": {
     "start": "export MODE=PRODUCTION && ts-node src/index.ts",
     "start:dev": "export MODE=DEVELOPMENT && ts-node src/index.ts",
