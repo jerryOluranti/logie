@@ -1,6 +1,6 @@
 {
   "name": "logie",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "main": "dist/index.js",
   "description": "Catch, log and query runtime reports and exceptions with this library.",
   "repository": "git@github.com:jerryOluranti/logie.git",
