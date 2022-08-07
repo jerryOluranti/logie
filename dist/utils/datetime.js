@@ -18,7 +18,7 @@ function formatDateTime(timestamp) {
 }
 exports.formatDateTime = formatDateTime;
 function parseDateTime(str) {
-    const timestamp = Date.parse(str.replaceAll(" ", "T"));
+    const timestamp = Date.parse(str.trim().replace(" ", "T"));
     if (timestamp === 0 || isNaN(timestamp))
         throw new Error("Unable to parse datetime string; Invalid string format. [yyyy/mm/dd, hh:mm:ss]");
     return timestamp;

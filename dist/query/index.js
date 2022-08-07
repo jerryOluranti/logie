@@ -1,8 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Query = void 0;
-const tslib_1 = require("tslib");
-const promises_1 = require("fs/promises");
+const node_fs_1 = require("node:fs");
 const __1 = require("..");
 const catch_1 = require("../catch");
 const datetime_1 = require("../utils/datetime");
@@ -15,10 +14,8 @@ class Query {
     }
     ;
     readFileToBuffer() {
-        return tslib_1.__awaiter(this, void 0, void 0, function* () {
-            const data = yield (0, catch_1.catchAsync)((0, promises_1.readFile)(this.logPath));
-            this.node.parse(data);
-        });
+        const data = (0, catch_1.catchSync)((0, node_fs_1.readFileSync)(this.logPath.concat(__1.config.logName)), () => { }, true);
+        this.node.parse(data);
     }
 }
 exports.Query = Query;
@@ -26,18 +23,21 @@ class QueryFactory {
     constructor() {
         this.size = 0;
         this.logs = [];
-        this.temp = [];
     }
     get() {
-        const _temp = this.temp;
-        this.temp = [];
+        const _temp = this.temp || [];
+        this.temp = undefined;
         return _temp;
+    }
+    getAll() {
+        return this.logs;
     }
     parse(logBuffer) {
         var _a;
         let buf = logBuffer.toString().split('\n').reverse();
         buf.pop();
         buf = buf.reverse();
+        buf.pop();
         this.logs = buf.map(log => {
             const parsedLog = log.split(",");
             return {
@@ -49,31 +49,28 @@ class QueryFactory {
         });
         this.size = this.logs.length;
         this.lastLogTime = ((_a = this.logs.at(-1)) === null || _a === void 0 ? void 0 : _a.timestamp) || undefined;
+        this.startDate = this.logs[0].timestamp;
     }
     head(length = 5) {
-        return this.logs.slice(0, length + 1);
+        return this.logs.slice(0, length);
     }
     tail(length = 5) {
-        return this.logs.slice(this.logs.length - length + 1);
-    }
-    findByTimeStamp(timestamp) {
-        return this.logs.find(log => log.timestamp === timestamp);
+        return this.logs.slice(-1 * length);
     }
     findByTimeRange(startTime, stopTime = 0) {
-        if (startTime <= 0)
-            throw new Error("Invalid startTime value");
         if (stopTime === 0) {
             this.temp = (this.temp || this.logs).filter(log => log.timestamp >= startTime);
             return this;
         }
         this.temp = (this.temp || this.logs).filter(log => log.timestamp >= startTime && log.timestamp <= stopTime);
+        console.log(this.temp);
         return this;
     }
-    findByErrorLevel(level) {
+    findByLevel(level) {
         this.temp = (this.temp || this.logs).filter(log => log.level === level);
         return this;
     }
-    findByErrorMessage(message) {
+    findByMessage(message) {
         this.temp = (this.temp || this.logs).filter(log => log.message.includes(message));
         return this;
     }

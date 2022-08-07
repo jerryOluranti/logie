@@ -1,36 +1,39 @@
-import { exec } from "node:child_process";
 import path from "node:path";
-import { existsSync, readFileSync } from "node:fs";
+import { existsSync, readFileSync, rm, rmSync } from "node:fs";
 import { log } from "../logger";
 import { config, catchSync } from "../";
 import { parseDateTime, formatDateTime } from "../utils/datetime";
+import snooze from "../utils/snooze";
+import { LogLevel } from "../../types";
 
 export function loggerTestSuite() {
   let logData: string[] | undefined;
   let testLog: string[] | undefined;
-  beforeAll(() => {
-    // delete the logs dir if it exists
-    if (existsSync(config.logPath)) {
-      exec(`rm -r ${config.logPath}`, (err, _) => {
-        if (err) throw new Error(err.message);
-      });
-    }
 
-    // log test error
-    log("This is from tests");
+  // delete the logs dir if it exists
+  if (existsSync(config.logPath)) {
+    rmSync(config.logPath, {recursive: true});
+  }
 
-    // read log file
-    logData = catchSync(
-      readFileSync(config.logPath + config.logName),
-      null,
-      true
-    )
-      ?.toString()
-      .split("\n");
+  const levels: Array<LogLevel | undefined> = ["LOG", "INFO", "DEBUG", "WARN", "ERROR", "CRITICAL", "FATAL", undefined, undefined];
 
-    logData?.pop();
-    testLog = logData?.pop()!.split(",");
-  });
+  // log test error
+  levels.forEach((l, i) => {
+    snooze(5000);
+    log("This is from tests: " + i, l)
+  })
+  
+  // read log file
+  logData = catchSync(
+    readFileSync(config.logPath + config.logName),
+    null,
+    true
+  )
+    ?.toString()
+    .split("\n");
+
+  logData?.pop();
+  testLog = logData?.pop()!.split(",");
 
   it("should create logs dir", () => {
     expect(existsSync(config.logPath)).toEqual(true);
@@ -44,7 +47,8 @@ export function loggerTestSuite() {
   it("should have correct timestamp", () => {
     const time = testLog
       ?.at(0)!
-      .replace(" => ISSUE", "")
+      .split("=>")
+      .at(0)!
       .trim()
       .replace("[", "")
       .replace("]", "");

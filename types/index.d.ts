@@ -6,22 +6,86 @@ export interface ILoggerConfig {
   logName: string,
   logPath: string,
   maxSize?: number,
-  logToFile: boolean
+  logToFile: boolean,
+  defaultLevel?: LogLevel
 }
 
-export interface IQueryFactory {
+/**
+ * @class This is an API for quering log files
+ */
+export class Query {
+  node: QueryFactory;
+  /**@private */
+  readFileToBuffer(): Promise<void>;
+}
+
+/**
+ * This is an interface for `Query.node`; It specifies all methods for quering
+ */
+export interface QueryFactory {
+  /**
+   * length of logs
+   */
   size: number;
+  /**
+   * timestamp of creation date & time
+   */
+  startDate: number | undefined;
+  /** timestamp of last log */
   lastLogTime: number | undefined;
-  logs: Array<Log>;
-  get: () => Array<Log>;
-  parse: (logBuffer: Buffer) => void;
-  head: (length: number) => Array<Log>;
-  tail: (length: number) => Array<Log>;
-  findByTimeStamp: (timestamp: number) => Log | undefined;
-  findByTimeRange: (startTime: number, stopTime: number) => IQueryFactory;
-  findByErrorLevel: (level: LogLevel) => IQueryFactory;
-  findByOrigin: (origin: string) => IQueryFactory;
-  findByErrorMessage: (message: string) => IQueryFactory;
+  /**
+   * Get all logs
+   * @returns `Array<Log>`
+   */
+  getAll(): Array<Log>;
+  /**
+   * Get queried logs. Should be called on a single or chained query methods;
+   * @returns `Array<Log>`
+   */
+  get(): Array<Log>;
+  /**
+   * Converts a log file buffer in the correct log format to `Array<Log>`. Note that parsing is handled internally and this method should only be called for explicit cases and with a correct log file format buffer
+   * @param {Buffer} logBuffer
+   * @returns {void} void
+   */
+  parse(logBuffer: Buffer): void;
+  /**
+   * Gets the first sequence of logs
+   * @param {number} length optional, default: 5
+   * @returns `Array<Log>`
+   */
+  head(length?: number): Array<Log>;
+  /**
+   * Gets the last sequence of logs
+   * @param {number} length optional, default: 5
+   * @returns `Array<Log>`
+   */
+  tail(length?: number): Array<Log>;
+  /**
+   * `chainable` Gets logs within a range of timestamps provided
+   * @param {number} startTime
+   * @param {number} stopTime optional
+   * @returns `QueryFactory` this
+   */
+  findByTimeRange(startTime: number, stopTime?: number): QueryFactory;
+  /**
+   * `chainable` Gets logs with level provided
+   * @param {LogLevel} level `LogLevel`
+   * @returns `QueryFactory` this
+   */
+  findByLevel(level: LogLevel): QueryFactory;
+  /**
+   * `chainable` Gets logs with pathlike string
+   * @param {string} origin
+   * @returns `QueryFactory` this
+   */
+  findByOrigin(origin: string): QueryFactory;
+  /**
+   * `chainable` Gets logs with message 
+   * @param {string} message 
+   * @returns `QueryFactory` this
+   */
+  findByMessage(message: string): QueryFactory;
 }
 
 export interface Log {
@@ -31,13 +95,13 @@ export interface Log {
   message: string;
 }
 
-export declare type LogLevel = "DEBUG" | "INFO" | "LOG" | "WARN" | "ERROR" | "FATAL" | "CRITICAL";
+export declare type LogLevel = "DEBUG" | "INFO" | "LOG" | "WARN" | "ERROR" | "CRITICAL" | "FATAL";
 
 
 /**
  * Logs a message to the console and log file if `level` is specified
  * @param {string} message text to be logged
- * @param {LogLevel} level optional -  "DEBUG" | "INFO" | "LOG" | "WARN" | "ERROR" | "FATAL" | "CRITICAL"
+ * @param {LogLevel} level optional -  "DEBUG" | "INFO" | "LOG" | "WARN" | "ERROR" | "CRITICAL" | "FATAL"
  * @returns {void} void
  */
 export declare function log(message: string, level?: LogLevel): void;
