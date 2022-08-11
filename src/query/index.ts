@@ -1,7 +1,7 @@
-import { readFile } from "fs/promises";
+import { readFileSync } from "node:fs";
 import { config } from "..";
-import { catchAsync } from "../handler";
-import { IQueryFactory, Log, ErrorLevel } from "@types";
+import { catchSync } from "../catch";
+import { QueryFactory as IQueryFactory, Log, LogLevel } from "@types";
 import { parseDateTime } from "../utils/datetime";
 
 export class Query {
@@ -12,8 +12,8 @@ export class Query {
     this.readFileToBuffer();
   };
 
-  private async readFileToBuffer() {
-    const data = await catchAsync(readFile(this.logPath!));
+  private readFileToBuffer() {
+    const data = catchSync(readFileSync(this.logPath!.concat(config.logName)), () => {}, true);
 
     this.node.parse(data as Buffer);
   }
@@ -23,70 +23,85 @@ export class Query {
 class QueryFactory implements IQueryFactory {
   size = 0;
   lastLogTime: number | undefined;
-  logs: Log[] = [];
-  private temp: Log[] = [];
+  startDate: number | undefined;
+  private logs: Log[] = [];
+  private temp: Log[] | undefined;
 
   get() {
-    const _temp = this.temp;
-    this.temp = [];
+    const _temp = this.temp || [];
+    this.temp = undefined;
     return _temp;
   }
 
+  getAll() {
+    return this.logs;
+  }
   parse (logBuffer: Buffer) {
     let buf = logBuffer.toString().split('\n').reverse();
     buf.pop();
     buf = buf.reverse();
+    buf.pop();
 
     this.logs = buf.map(log => {
       const parsedLog = log.split(",");
       return {
         timestamp: parseDateTime(parsedLog[0].split("=>")[0].trim().replace('[', '').replace(']','')),
         level: parsedLog[0].split("=>")[1].trim(),
-        stack: parsedLog[1].trim(),
-        message: parsedLog[2].trim()
+        origin: parsedLog[1].trim().replace("Origin: ", ""),
+        message: parsedLog[2].trim().replace("Message: ", "")
       } as Log
     })
 
     this.size = this.logs.length;
     this.lastLogTime = this.logs.at(-1)?.timestamp || undefined;
+    this.startDate = this.logs[0].timestamp;
   }
 
   head(length: number = 5) {
-    return this.logs.slice(0, length + 1);
+    return this.logs.slice(0, length);
   }
 
   tail(length: number = 5) {
-    return this.logs.slice(this.logs.length - length + 1);
+    return this.logs.slice(-1 * length);
   }
 
-  findByTimeStamp(timestamp: number) {
-    return this.logs.find(log => log.timestamp === timestamp)
-  }
+  // findByTimeStamp(timestamp: number) {
+  //   if(timestamp < this.startDate!) { 
+  //     this.temp = [];
+  //     return this;
+  //   }
+  //   this.temp = this.temp.filter(log => {
+  //     const diff = Math.floor((log.timestamp - timestamp) / 1000 / 60 / 60 / 24);
+  //     console.log(diff);
+  //     if(diff >= 0 && diff <= 1) return log;
+  //   })
+
+  //   return this;
+  // }
 
   findByTimeRange(startTime: number, stopTime: number = 0) {
-    if (startTime <= 0) throw new Error("Invalid startTime value");
-
     if (stopTime === 0) {
       this.temp = (this.temp || this.logs).filter(log => log.timestamp >= startTime);
       return this;
     }
 
     this.temp = (this.temp || this.logs).filter(log => log.timestamp >= startTime && log.timestamp <= stopTime);
+    console.log(this.temp);
     return this;
   }
 
-  findByErrorLevel(level: ErrorLevel) {
+  findByLevel(level: LogLevel) {
     this.temp = (this.temp || this.logs).filter(log => log.level === level);
     return this;
   }
 
-  findByErrorMessage(message: string) {
+  findByMessage(message: string) {
     this.temp = (this.temp || this.logs).filter(log => log.message.includes(message));
     return this;
   }
 
-  findByStack(stack: string) {
-    this.temp = (this.temp || this.logs).filter((log) => log.stack.includes(stack));
+  findByOrigin(origin: string) {
+    this.temp = (this.temp || this.logs).filter((log) => log.origin.includes(origin));
     return this;
   }
 }
