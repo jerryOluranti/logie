@@ -1,16 +1,15 @@
-import { cwd } from "node:process";
+import { cwd, env } from "node:process";
 import { platform } from "node:os";
 import { ILoggerConfig } from "@types";
-require("dotenv").config();
 
-const pathSeperator = platform() === "win32" ? "\\" : "/";
+export const pathSeperator = platform() === "win32" ? "\\" : "/";
 
 function init(): ILoggerConfig {
   let config: ILoggerConfig | undefined;
 
   try {
     let path = "";
-    if (process.env.DEV_MODE === "DEVELOPMENT") {
+    if (env.DEV_MODE === "DEVELOPMENT") {
       path = `..${pathSeperator}package.json`;
     } else {
       path = cwd()
@@ -25,11 +24,13 @@ function init(): ILoggerConfig {
   return {
     logName: config?.logName ? formatLogName(config.logName) : "test.log",
     logPath:
-      process.env.DEV_MODE !== "DEVELOPMENT"
+      env.DEV_MODE !== "DEVELOPMENT"
         ? formatPath(config?.logPath ? config.logPath : "")
         : `${pathSeperator}logs`,
-    logToFile: config?.logToFile ?? false,
-    defaultLevel: config?.defaultLevel
+    logToFile: config?.logToFile || false,
+    defaultLevel: config?.defaultLevel,
+    showOrigin: config?.showOrigin,
+    showStackTrace: config?.showStackTrace || false
   };
 }
 

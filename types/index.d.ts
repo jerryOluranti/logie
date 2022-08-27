@@ -7,7 +7,9 @@ export interface ILoggerConfig {
   logPath: string,
   maxSize?: number,
   logToFile: boolean,
-  defaultLevel?: LogLevel
+  defaultLevel?: LogLevel,
+  showOrigin?: boolean,
+  showStackTrace?: boolean
 }
 
 /**

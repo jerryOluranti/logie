@@ -1,6 +1,6 @@
 {
   "name": "logie",
-  "version": "1.0.3",
+  "version": "1.0.5",
   "main": "dist/index.js",
   "description": "Catch, log and query runtime reports and exceptions with this library.",
   "repository": "git@github.com:jerryOluranti/logie.git",
@@ -18,11 +18,9 @@
     "start": "export DEV_MODE=PRODUCTION && ts-node src/index.ts",
     "start:dev": "export DEV_MODE=DEVELOPMENT && ts-node src/index.ts",
     "compile": "tsc && cp types/index.d.ts dist/",
-    "test": "jest src/tests/test.spec.ts"
+    "test": "jest --silent src/tests/test.spec.ts"
   },
-  "dependencies": {
-    "dotenv": "^16.0.1"
-  },
+  "dependencies": {},
   "devDependencies": {
     "@types/jest": "^28.1.6",
     "@types/node": "^17.0.23",
@@ -36,6 +34,8 @@
     "logName": "merry",
     "logPath": "applogs",
     "logToFile": true,
-    "defaultLevel": "INFO"
+    "defaultLevel": "LOG",
+    "showOrigin": true,
+    "showStackTrace": true
   }
 }

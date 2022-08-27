@@ -1,5 +1,6 @@
 import { LogLevel } from "../../types";
 import { Query } from "../query";
+import { config } from "../";
 
 export function queryTestSuite() {
   let query = new Query();
@@ -36,6 +37,6 @@ export function queryTestSuite() {
 
   it.each(levels)(
     "should find all logs with level %p",
-    (level) => expect(node.findByLevel(level).get().length).toEqual(level === "INFO" ? 3 : 1)
+    (level) => expect(node.findByLevel(level).get().length).toEqual(level === (config.defaultLevel || "INFO") ? 3 : 1)
   )
 }

@@ -7,7 +7,7 @@ import { log } from "../logger";
  * @param {boolean} [_throw] Optional - specifies whether an error is thrown. default => false
  * @returns {Promise<T | undefined>} Promise<T | undefined>
  */
-export async function catchAsync<T>(resolve: Promise<T>, cb?: any, _throw: boolean = false) {
+export async function catchAsync<T>(resolve: Promise<T>, cb?: any, _throw = false) {
   try {
     return (await resolve) as T;
   } catch (err) {
@@ -22,7 +22,7 @@ export async function catchAsync<T>(resolve: Promise<T>, cb?: any, _throw: boole
  * @param {boolean} [_throw] Optional - specifies whether an error is thrown. default => false
  * @returns {void} void
  */
-export async function catchAsyncNoReturn<T>(resolve: Promise<T>, cb?: any, _throw: boolean = false) {
+export async function catchAsyncNoReturn<T>(resolve: Promise<T>, cb?: any, _throw = false) {
   try {
     await resolve;
   } catch (err) {
@@ -37,7 +37,7 @@ export async function catchAsyncNoReturn<T>(resolve: Promise<T>, cb?: any, _thro
  * @param {boolean} [_throw] Optional - specifies whether an error is thrown. default => false
  * @returns {T | undefined} T | undefined
  */
-export function catchSync<T>(result: T, cb?: any, _throw: boolean = false) {
+export function catchSync<T>(result: T, cb?: any, _throw = false) {
   try {
     return result;
   } catch (err) {
@@ -52,7 +52,7 @@ export function catchSync<T>(result: T, cb?: any, _throw: boolean = false) {
  * @param {boolean} [_throw] Optional - specifies whether an error is thrown. default => false
  * @returns {void} void
  */
-export function catchSyncNoReturn(result: any, cb?: any, _throw: boolean = false) {
+export function catchSyncNoReturn(result: any, cb?: any, _throw = false) {
   try {
     result;
   } catch (err) {
@@ -62,7 +62,7 @@ export function catchSyncNoReturn(result: any, cb?: any, _throw: boolean = false
 
 
 function handleError(err: any, _throw: boolean, cb?: any) {
-  log(err.message, "ERROR");
+  log(err, "ERROR");
   if(cb) cb(err);
   if (_throw) throw new Error(err.message);
   return undefined;
