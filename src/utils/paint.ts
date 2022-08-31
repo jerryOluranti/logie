@@ -1,43 +1,48 @@
-import chalk from "chalk";
+import styles from 'ansi-styles';
 import { LogLevel } from "../../types";
 
 export function getBgPaint(level: LogLevel) {
   switch(level) {
     case "LOG":
-      return chalk.bgGray;
+      return compose(styles.bgColor.bgGray);
     case "INFO":
-      return chalk.bgGreenBright;
+      return compose(styles.bgColor.bgGreenBright);
     case "DEBUG":
-      return chalk.bgCyan;
+      return compose(styles.bgColor.bgCyan);
     case "WARN":
-      return chalk.bgYellow;
+      return compose(styles.bgColor.bgYellow);
     case "ERROR":
-      return chalk.bgRedBright;
+      return compose(styles.bgColor.bgRedBright);
     case "CRITICAL":
-      return chalk.bgRed;
+      return compose(styles.bgColor.bgRed);
     case "FATAL":
-      return chalk.bgRed
+      return compose(styles.bgColor.bgRed);
     default:
-      return chalk.bgGray
+      return compose(styles.bgColor.bgGray);
   }
 }
+
 export function getPaint(level: LogLevel) {
   switch(level) {
     case "LOG":
       return (_: string) => _;
     case "INFO":
-      return chalk.greenBright;
+      return compose(styles.color.greenBright);
     case "DEBUG":
-      return chalk.cyan;
+      return compose(styles.color.cyan);
     case "WARN":
-      return chalk.yellow;
+      return compose(styles.color.yellow);
     case "ERROR":
-      return chalk.redBright;
+      return compose(styles.color.redBright);
     case "CRITICAL":
-      return chalk.red;
+      return compose(styles.color.red);
     case "FATAL":
-      return chalk.red
+      return compose(styles.color.red);
     default:
       return (_: string) => _
   }
+}
+
+function compose(color: any) {
+  return (str: string) => `${color.open}${str}${color.close}`
 }

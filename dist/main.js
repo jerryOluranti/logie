@@ -1,7 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.config = exports.pathSeperator = void 0;
-var tslib_1 = require("tslib");
 var node_process_1 = require("node:process");
 var node_os_1 = require("node:os");
 exports.pathSeperator = (0, node_os_1.platform)() === "win32" ? "\\" : "/";
@@ -50,6 +49,3 @@ function formatLogName(name) {
     return name.endsWith(".log") ? name : name.concat(".log");
 }
 exports.config = init();
-tslib_1.__exportStar(require("./logger"), exports);
-tslib_1.__exportStar(require("./catch"), exports);
-tslib_1.__exportStar(require("./query"), exports);

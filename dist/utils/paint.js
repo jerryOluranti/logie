@@ -1,47 +1,50 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.getPaint = exports.getBgPaint = void 0;
-const tslib_1 = require("tslib");
-const chalk_1 = tslib_1.__importDefault(require("chalk"));
+var tslib_1 = require("tslib");
+var ansi_styles_1 = tslib_1.__importDefault(require("ansi-styles"));
 function getBgPaint(level) {
     switch (level) {
         case "LOG":
-            return chalk_1.default.bgGray;
+            return compose(ansi_styles_1.default.bgColor.bgGray);
         case "INFO":
-            return chalk_1.default.bgGreenBright;
+            return compose(ansi_styles_1.default.bgColor.bgGreenBright);
         case "DEBUG":
-            return chalk_1.default.bgCyan;
+            return compose(ansi_styles_1.default.bgColor.bgCyan);
         case "WARN":
-            return chalk_1.default.bgYellow;
+            return compose(ansi_styles_1.default.bgColor.bgYellow);
         case "ERROR":
-            return chalk_1.default.bgRedBright;
+            return compose(ansi_styles_1.default.bgColor.bgRedBright);
         case "CRITICAL":
-            return chalk_1.default.bgRed;
+            return compose(ansi_styles_1.default.bgColor.bgRed);
         case "FATAL":
-            return chalk_1.default.bgRed;
+            return compose(ansi_styles_1.default.bgColor.bgRed);
         default:
-            return chalk_1.default.bgGray;
+            return compose(ansi_styles_1.default.bgColor.bgGray);
     }
 }
 exports.getBgPaint = getBgPaint;
 function getPaint(level) {
     switch (level) {
         case "LOG":
-            return (_) => _;
+            return function (_) { return _; };
         case "INFO":
-            return chalk_1.default.greenBright;
+            return compose(ansi_styles_1.default.color.greenBright);
         case "DEBUG":
-            return chalk_1.default.cyan;
+            return compose(ansi_styles_1.default.color.cyan);
         case "WARN":
-            return chalk_1.default.yellow;
+            return compose(ansi_styles_1.default.color.yellow);
         case "ERROR":
-            return chalk_1.default.redBright;
+            return compose(ansi_styles_1.default.color.redBright);
         case "CRITICAL":
-            return chalk_1.default.red;
+            return compose(ansi_styles_1.default.color.red);
         case "FATAL":
-            return chalk_1.default.red;
+            return compose(ansi_styles_1.default.color.red);
         default:
-            return (_) => _;
+            return function (_) { return _; };
     }
 }
 exports.getPaint = getPaint;
+function compose(color) {
+    return function (str) { return "".concat(color.open).concat(str).concat(color.close); };
+}

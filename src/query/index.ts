@@ -1,5 +1,5 @@
 import { readFileSync } from "node:fs";
-import { config } from "..";
+import { config } from "../";
 import { catchSync } from "../catch";
 import { QueryFactory as IQueryFactory, Log, LogLevel } from "@types";
 import { parseDateTime } from "../utils/datetime";

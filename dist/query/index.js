@@ -1,45 +1,46 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Query = void 0;
-const node_fs_1 = require("node:fs");
-const __1 = require("..");
-const catch_1 = require("../catch");
-const datetime_1 = require("../utils/datetime");
-class Query {
-    constructor(logPath) {
+var node_fs_1 = require("node:fs");
+var __1 = require("../");
+var catch_1 = require("../catch");
+var datetime_1 = require("../utils/datetime");
+var Query = (function () {
+    function Query(logPath) {
         this.logPath = logPath;
         this.node = new QueryFactory();
         this.logPath = logPath || __1.config.logPath;
         this.readFileToBuffer();
     }
     ;
-    readFileToBuffer() {
-        const data = (0, catch_1.catchSync)((0, node_fs_1.readFileSync)(this.logPath.concat(__1.config.logName)), () => { }, true);
+    Query.prototype.readFileToBuffer = function () {
+        var data = (0, catch_1.catchSync)((0, node_fs_1.readFileSync)(this.logPath.concat(__1.config.logName)), function () { }, true);
         this.node.parse(data);
-    }
-}
+    };
+    return Query;
+}());
 exports.Query = Query;
-class QueryFactory {
-    constructor() {
+var QueryFactory = (function () {
+    function QueryFactory() {
         this.size = 0;
         this.logs = [];
     }
-    get() {
-        const _temp = this.temp || [];
+    QueryFactory.prototype.get = function () {
+        var _temp = this.temp || [];
         this.temp = undefined;
         return _temp;
-    }
-    getAll() {
+    };
+    QueryFactory.prototype.getAll = function () {
         return this.logs;
-    }
-    parse(logBuffer) {
+    };
+    QueryFactory.prototype.parse = function (logBuffer) {
         var _a;
-        let buf = logBuffer.toString().split('\n').reverse();
+        var buf = logBuffer.toString().split('\n').reverse();
         buf.pop();
         buf = buf.reverse();
         buf.pop();
-        this.logs = buf.map(log => {
-            const parsedLog = log.split(",");
+        this.logs = buf.map(function (log) {
+            var parsedLog = log.split(",");
             return {
                 timestamp: (0, datetime_1.parseDateTime)(parsedLog[0].split("=>")[0].trim().replace('[', '').replace(']', '')),
                 level: parsedLog[0].split("=>")[1].trim(),
@@ -50,32 +51,36 @@ class QueryFactory {
         this.size = this.logs.length;
         this.lastLogTime = ((_a = this.logs.at(-1)) === null || _a === void 0 ? void 0 : _a.timestamp) || undefined;
         this.startDate = this.logs[0].timestamp;
-    }
-    head(length = 5) {
+    };
+    QueryFactory.prototype.head = function (length) {
+        if (length === void 0) { length = 5; }
         return this.logs.slice(0, length);
-    }
-    tail(length = 5) {
+    };
+    QueryFactory.prototype.tail = function (length) {
+        if (length === void 0) { length = 5; }
         return this.logs.slice(-1 * length);
-    }
-    findByTimeRange(startTime, stopTime = 0) {
+    };
+    QueryFactory.prototype.findByTimeRange = function (startTime, stopTime) {
+        if (stopTime === void 0) { stopTime = 0; }
         if (stopTime === 0) {
-            this.temp = (this.temp || this.logs).filter(log => log.timestamp >= startTime);
+            this.temp = (this.temp || this.logs).filter(function (log) { return log.timestamp >= startTime; });
             return this;
         }
-        this.temp = (this.temp || this.logs).filter(log => log.timestamp >= startTime && log.timestamp <= stopTime);
+        this.temp = (this.temp || this.logs).filter(function (log) { return log.timestamp >= startTime && log.timestamp <= stopTime; });
         console.log(this.temp);
         return this;
-    }
-    findByLevel(level) {
-        this.temp = (this.temp || this.logs).filter(log => log.level === level);
+    };
+    QueryFactory.prototype.findByLevel = function (level) {
+        this.temp = (this.temp || this.logs).filter(function (log) { return log.level === level; });
         return this;
-    }
-    findByMessage(message) {
-        this.temp = (this.temp || this.logs).filter(log => log.message.includes(message));
+    };
+    QueryFactory.prototype.findByMessage = function (message) {
+        this.temp = (this.temp || this.logs).filter(function (log) { return log.message.includes(message); });
         return this;
-    }
-    findByOrigin(origin) {
-        this.temp = (this.temp || this.logs).filter((log) => log.origin.includes(origin));
+    };
+    QueryFactory.prototype.findByOrigin = function (origin) {
+        this.temp = (this.temp || this.logs).filter(function (log) { return log.origin.includes(origin); });
         return this;
-    }
-}
+    };
+    return QueryFactory;
+}());

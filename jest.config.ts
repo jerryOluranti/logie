@@ -67,7 +67,7 @@ export default {
   // A set of global variables that need to be available in all test environments
   globals: {
     'ts-jest': {
-      useESM: true
+      // useESM: true
     }
   },
 
@@ -183,7 +183,7 @@ export default {
 
   // An array of regexp pattern strings that are matched against all source file paths, matched files will skip transformation
   transformIgnorePatterns: [
-    "/node_modules/",
+    "/node_modules/*",
     "\\.pnp\\.[^\\/]+$"
   ],
 

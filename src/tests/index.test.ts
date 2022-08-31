@@ -1,5 +1,4 @@
-import { platform } from "node:os";
-import { config } from "../index";
+import { config } from "../";
 
 export function initTestSuite() {
 

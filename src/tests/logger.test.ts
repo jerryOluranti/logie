@@ -1,7 +1,8 @@
 import path from "node:path";
 import { existsSync, readFileSync, rm, rmSync } from "node:fs";
 import { log } from "../logger";
-import { config, catchSync } from "../";
+import { config } from "../";
+import {catchSync} from "../catch"
 import { parseDateTime, formatDateTime } from "../utils/datetime";
 import snooze from "../utils/snooze";
 import { LogLevel } from "../../types";
