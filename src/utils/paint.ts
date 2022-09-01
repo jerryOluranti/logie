@@ -1,5 +1,5 @@
 import styles from 'ansi-styles';
-import { LogLevel } from "../../types";
+import { LogLevel } from "@types";
 
 export function getBgPaint(level: LogLevel) {
   switch(level) {
