@@ -11,7 +11,7 @@ export async function catchAsync<T>(resolve: Promise<T>, cb?: any, _throw = fals
   try {
     return (await resolve) as T;
   } catch (err) {
-    return handleError(err, cb, _throw);
+    return handleError(err, _throw, cb);
   }
 }
 
@@ -26,7 +26,7 @@ export async function catchAsyncNoReturn<T>(resolve: Promise<T>, cb?: any, _thro
   try {
     await resolve;
   } catch (err) {
-    handleError(err, cb);
+    handleError(err, _throw, cb);
   }
 }
 
@@ -41,7 +41,7 @@ export function catchSync<T>(result: T, cb?: any, _throw = false) {
   try {
     return result;
   } catch (err) {
-    return handleError(err, cb);
+    return handleError(err, _throw, cb);
   }
 }
 
@@ -56,7 +56,7 @@ export function catchSyncNoReturn(result: any, cb?: any, _throw = false) {
   try {
     result;
   } catch (err) {
-    handleError(err, cb);
+    handleError(err, _throw, cb);
   }
 }
 
@@ -64,6 +64,6 @@ export function catchSyncNoReturn(result: any, cb?: any, _throw = false) {
 function handleError(err: any, _throw: boolean, cb?: any) {
   log(err, "ERROR");
   if(cb) cb(err);
-  if (_throw) throw new Error(err.message);
+  if (_throw) log(err.message, 'ERROR');
   return undefined;
 }

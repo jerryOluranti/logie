@@ -15,7 +15,7 @@ function catchAsync(resolve, cb, _throw) {
                 case 1: return [2, (_a.sent())];
                 case 2:
                     err_1 = _a.sent();
-                    return [2, handleError(err_1, cb, _throw)];
+                    return [2, handleError(err_1, _throw, cb)];
                 case 3: return [2];
             }
         });
@@ -36,7 +36,7 @@ function catchAsyncNoReturn(resolve, cb, _throw) {
                     return [3, 3];
                 case 2:
                     err_2 = _a.sent();
-                    handleError(err_2, cb);
+                    handleError(err_2, _throw, cb);
                     return [3, 3];
                 case 3: return [2];
             }
@@ -50,7 +50,7 @@ function catchSync(result, cb, _throw) {
         return result;
     }
     catch (err) {
-        return handleError(err, cb);
+        return handleError(err, _throw, cb);
     }
 }
 exports.catchSync = catchSync;
@@ -60,7 +60,7 @@ function catchSyncNoReturn(result, cb, _throw) {
         result;
     }
     catch (err) {
-        handleError(err, cb);
+        handleError(err, _throw, cb);
     }
 }
 exports.catchSyncNoReturn = catchSyncNoReturn;
@@ -69,6 +69,6 @@ function handleError(err, _throw, cb) {
     if (cb)
         cb(err);
     if (_throw)
-        throw new Error(err.message);
+        (0, logger_1.log)(err.message, 'ERROR');
     return undefined;
 }
