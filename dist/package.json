@@ -1,6 +1,6 @@
 {
   "name": "logie",
-  "version": "1.0.8",
+  "version": "1.0.9",
   "description": "Catch, log and query runtime reports and exceptions with this library.",
   "repository": "git@github.com:jerryOluranti/logie.git",
   "author": "Jeremiah Faluyi <faluyijeremiah2018@gmail.com>",
