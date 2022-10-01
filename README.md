@@ -113,6 +113,8 @@ Now, the new output path of the log file will be `{project_root}/v1/logs/dev.log
       "maxFileSize": 2000
     }
   ...
+  
+```
 
 `logName` - A custom file name (defaults to `test.log`). Will be suffixed with `.log`
 
