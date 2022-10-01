@@ -110,10 +110,12 @@ Now, the new output path of the log file will be `{project_root}/v1/logs/dev.log
       "logName": "dev", 
       "logPath": "/v1/",
       "defaultLevel: "DEBUG",
-      "maxFileSize": 2000
+      "maxSize": 2000,
+      "showOrigin": true,
+      "showStackTrace": true
     }
   ...
-  
+
 ```
 
 `logName` - A custom file name (defaults to `test.log`). Will be suffixed with `.log`
@@ -124,7 +126,11 @@ Now, the new output path of the log file will be `{project_root}/v1/logs/dev.log
 
 `defaultLevel` - Specifies the default log level. Valid values are:  "DEBUG", "INFO", "LOG", "WARN", "ERROR", "CRITICAL", "FATAL"
 
-`maxFileSize` - Specifies the file size limit of a log file in **KB**. Upon reaching this limit, a new log file will be created with a number suffix of the count eg: `test_1.log`. Log messages will then be written to this new file. ⚠️ **This feature is being developed currently and it is not available**
+`maxSize` - Specifies the file size limit of a log file in **KB**. Upon reaching this limit, a new log file will be created with a number suffix of the count eg: `test_1.log`. Log messages will then be written to this new file. ⚠️ **This feature is being developed currently and it is not available**
+
+`showOrigin` - `boolean` Indicates whether the origin of the log (filename:line:char) should be displayed **in the console**
+
+`showStackTrace` = `boolean` Display stack trace for errors. **Note that this only works for the error object"
 
 
 ### Catching
