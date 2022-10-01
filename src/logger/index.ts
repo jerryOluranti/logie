@@ -6,11 +6,11 @@ import {getBgPaint, getPaint} from "../utils/paint";
 
 /**
  * Logs a message to the console and log file if `level` is specified
- * @param {string} message text to be logged
+ * @param {any} message message to be logged
  * @param {LogLevel} level optional -  "DEBUG" | "INFO" | "LOG" | "WARN" | "ERROR" | "FATAL" | "CRITICAL"
  * @returns {void} void
  */
-export function log(message: string | Error, level?: LogLevel): void {
+export function log(message: any, level?: LogLevel): void {
   if (!message || message === "") return;
 
   const isError = message instanceof Error;
@@ -63,9 +63,9 @@ function logLocal(message: string, level: LogLevel, origin: string): void {
 }
 
 function logConsole(message: any, level: LogLevel, origin?: string, stack?: string): void {
-  const _origin = origin ? getPaint(level)("=> ".concat(origin.split(pathSeperator).pop()!.replace(')', ''))) : "";
+  const _origin = origin ? getPaint(level)(">> ".concat(origin.split(pathSeperator).pop()!.replace(')', ''))) : "";
 
-  if (typeof message === 'object') {
+  if (!['string', 'number', 'boolean', 'undefined', 'null', 'nan'].includes(typeof message)) {
     console.log(
       getBgPaint(level)(` ${level} `),
       _origin.replace('=>','').trim()

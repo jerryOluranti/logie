@@ -62,4 +62,3 @@ export * from "./logger";
 export * from "./catch";
 export * from "./query";
 
-// console.log(cfg);
