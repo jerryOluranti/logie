@@ -102,6 +102,7 @@ Now, the new output path of the log file will be `{project_root}/v1/logs/dev.log
 
 ----------
 #### Configurations
+```
  // package.json
   ...
     "logie": {

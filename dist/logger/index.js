@@ -38,8 +38,8 @@ function logLocal(message, level, origin) {
     (0, node_fs_1.writeFileSync)(__1.config.logPath + __1.config.logName, newLog);
 }
 function logConsole(message, level, origin, stack) {
-    var _origin = origin ? (0, paint_1.getPaint)(level)("=> ".concat(origin.split(__1.pathSeperator).pop().replace(')', ''))) : "";
-    if (typeof message === 'object') {
+    var _origin = origin ? (0, paint_1.getPaint)(level)(">> ".concat(origin.split(__1.pathSeperator).pop().replace(')', ''))) : "";
+    if (!['string', 'number', 'boolean', 'undefined', 'null', 'nan'].includes(typeof message)) {
         console.log((0, paint_1.getBgPaint)(level)(" ".concat(level, " ")), _origin.replace('=>', '').trim());
         console.dir(message);
     }
